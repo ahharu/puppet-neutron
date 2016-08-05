@@ -90,9 +90,8 @@ class neutron::plugins::midonet (
   } else {
     Package['neutron'] -> Neutron_plugin_midonet<||>
   }
-  package { 'neutron-plugin-midonet':
+  package { '$::neutron::params::midonet_server_package':
     ensure => $package_ensure,
-    name   => $::neutron::params::midonet_server_package
   }
   neutron_plugin_midonet {
     'MIDONET/midonet_uri':  value => "http://${midonet_api_ip}:${midonet_api_port}/midonet-api";
