@@ -26,7 +26,7 @@ describe 'neutron::plugins::midonet' do
       params.merge!(default_params)
     end
     it 'should install package python-networking-midonet' do
-      is_expected.to contain_package('neutron-plugins-midonet').with(
+      is_expected.to contain_package('neutron-plugin-midonet').with(
         :name    => 'python-networking-midonet'
         :ensure  => 'present',
     end
