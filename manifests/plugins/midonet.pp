@@ -90,9 +90,12 @@ class neutron::plugins::midonet (
   } else {
     Package['neutron'] -> Neutron_plugin_midonet<||>
   }
-  package { $::neutron::params::midonet_server_package:
+
+  package { 'neutron-plugin-midonet':
+    name   => $::neutron::params::midonet_server_package,
     ensure => $package_ensure,
   }
+
   neutron_plugin_midonet {
     'MIDONET/midonet_uri':  value => "http://${midonet_api_ip}:${midonet_api_port}/midonet-api";
     'MIDONET/username':     value => $keystone_username;
@@ -104,7 +107,7 @@ class neutron::plugins::midonet (
       path    => '/etc/default/neutron-server',
       match   => '^NEUTRON_PLUGIN_CONFIG=(.*)$',
       line    => "NEUTRON_PLUGIN_CONFIG=${::neutron::params::midonet_config_file}",
-      require => [ Package['neutron-server'], Package[$::neutron::params::midonet_server_package] ],
+      require => [ Package['neutron-server'], Package['neutron-plugin-midonet'] ],
       notify  => Service['neutron-server'],
     }
   }
