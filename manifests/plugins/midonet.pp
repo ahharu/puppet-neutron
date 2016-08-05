@@ -92,8 +92,8 @@ class neutron::plugins::midonet (
   }
 
   package { 'neutron-plugin-midonet':
-    name   => $::neutron::params::midonet_server_package,
     ensure => $package_ensure,
+    name   => $::neutron::params::midonet_server_package,
   }
 
   neutron_plugin_midonet {
