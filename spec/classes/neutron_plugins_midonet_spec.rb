@@ -1,13 +1,9 @@
 require 'spec_helper'
-
 describe 'neutron::plugins::midonet' do
-
   let :pre_condition do
     "class { 'neutron::server': auth_password => 'password' }
-     class { 'neutron': rabbit_password => 'passw0rd' }
-     package { 'python-networking-midonet': }"
+     class { 'neutron': rabbit_password => 'passw0rd' }"
   end
-
   let :default_params do
   {
     :midonet_api_ip    => '127.0.0.1',
@@ -17,30 +13,28 @@ describe 'neutron::plugins::midonet' do
     :keystone_tenant   => 'services'
   }
   end
-
   let :test_facts do
     { :operatingsystem           => 'default',
       :operatingsystemrelease    => 'default'
     }
   end
-
   shared_examples_for 'neutron midonet plugin' do
-
     let :params do
       {}
     end
-
     before do
       params.merge!(default_params)
     end
-
+    it 'should install package python-networking-midonet' do
+      is_expected.to contain_package('python-networking-midonet').with(
+        :ensure  => 'present',
+    end
     it 'should create plugin symbolic link' do
       is_expected.to contain_file('/etc/neutron/plugin.ini').with(
         :ensure  => 'link',
         :target  => '/etc/neutron/plugins/midonet/midonet.ini',
         :require => 'Package[python-networking-midonet]')
     end
-
     it 'should perform default configuration of' do
       midonet_uri = "http://" + params[:midonet_api_ip] + ":" + params[:midonet_api_port] + "/midonet-api";
       is_expected.to contain_neutron_plugin_midonet('MIDONET/midonet_uri').with_value(midonet_uri)
@@ -48,9 +42,7 @@ describe 'neutron::plugins::midonet' do
       is_expected.to contain_neutron_plugin_midonet('MIDONET/password').with_value(params[:keystone_password])
       is_expected.to contain_neutron_plugin_midonet('MIDONET/project_id').with_value(params[:keystone_tenant])
     end
-
   end
-
   context 'on Debian platforms' do
     let :facts do
       @default_facts.merge(test_facts.merge({
@@ -68,7 +60,6 @@ describe 'neutron::plugins::midonet' do
     end
     it_configures 'neutron midonet plugin'
   end
-
   context 'on RedHat platforms' do
     let :facts do
       @default_facts.merge(test_facts.merge({
@@ -78,5 +69,4 @@ describe 'neutron::plugins::midonet' do
     end
     it_configures 'neutron midonet plugin'
   end
-
 end
