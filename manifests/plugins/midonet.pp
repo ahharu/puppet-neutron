@@ -90,7 +90,7 @@ class neutron::plugins::midonet (
   } else {
     Package['neutron'] -> Neutron_plugin_midonet<||>
   }
-  package { '$::neutron::params::midonet_server_package':
+  package { $::neutron::params::midonet_server_package:
     ensure => $package_ensure,
   }
   neutron_plugin_midonet {
