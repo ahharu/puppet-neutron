@@ -61,7 +61,7 @@ Puppet::Type.type(:neutron_port).provide(
       # The spec says that multiple ip addresses may be specified, but this
       # doesn't seem to work yet.
       opts << "--fixed-ip"
-      opts << @resource[:ip_address].map{|ip|"ip_address=#{ip}"}.join(',')
+      opts << resource[:ip_address].map{|ip|"ip_address=#{ip}"}.join(',')
     end
 
     if @resource[:subnet_name]
@@ -87,7 +87,9 @@ Puppet::Type.type(:neutron_port).provide(
 
     if @resource[:binding_profile]
       binding_profile_opts = @resource[:binding_profile].map{|k,v| "#{k}=#{v}"}.join(' ')
-      dict_opts << "--binding:profile type=dict #{binding_profile_opts}"
+      dict_opts << "--binding:profile"
+      dict_opts << "type=dict"
+      dict_opts << "#{binding_profile_opts}"
     end
 
     results = auth_neutron(
