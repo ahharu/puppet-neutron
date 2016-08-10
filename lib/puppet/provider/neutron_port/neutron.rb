@@ -12,8 +12,6 @@ Puppet::Type.type(:neutron_port).provide(
   EOT
   #TODO No security group support
 
-  commands :neutron => "neutron"
-
   mk_resource_methods
 
   def self.instances
@@ -53,6 +51,7 @@ Puppet::Type.type(:neutron_port).provide(
 
   def create
     opts = Array.new
+    dict_opts = Array.new
 
     if @resource[:admin_state_up] == "False"
       opts << "--admin-state-down"
@@ -88,7 +87,7 @@ Puppet::Type.type(:neutron_port).provide(
 
     if @resource[:binding_profile]
       binding_profile_opts = @resource[:binding_profile].map{|k,v| "#{k}=#{v}"}.join(' ')
-      opts << "--binding:profile type=dict #{binding_profile_opts}"
+      dict_opts << "--binding:profile type=dict #{binding_profile_opts}"
     end
 
     results = auth_neutron(
@@ -96,7 +95,8 @@ Puppet::Type.type(:neutron_port).provide(
       "--format=shell",
       "--name=#{resource[:name]}",
       opts,
-      resource[:network_name]
+      resource[:network_name],
+      dict_opts
     )
 
     attrs = self.class.parse_creation_output(results)

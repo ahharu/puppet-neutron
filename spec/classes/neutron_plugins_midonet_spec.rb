@@ -25,10 +25,12 @@ describe 'neutron::plugins::midonet' do
     before do
       params.merge!(default_params)
     end
+
     it 'should install package python-networking-midonet' do
       is_expected.to contain_package('python-networking-midonet').with(
-        :ensure  => 'present',
+        :ensure  => 'present')
     end
+
     it 'should create plugin symbolic link' do
       is_expected.to contain_file('/etc/neutron/plugin.ini').with(
         :ensure  => 'link',
