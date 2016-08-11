@@ -12,6 +12,8 @@ Puppet::Type.type(:neutron_port).provide(
   EOT
   #TODO No security group support
 
+  commands :neutron => 'neutron'
+
   mk_resource_methods
 
   def self.instances
@@ -68,7 +70,7 @@ Puppet::Type.type(:neutron_port).provide(
       # The spec says that multiple subnets may be specified, but this doesn't
       # seem to work yet.
       opts << "--fixed-ip"
-      opts << @resource[:subnet_name].map{|s|"subnet_id=#{s}"}.join(',')
+      opts << resource[:subnet_name].map{|s|"subnet_id=#{s}"}.join(',')
     end
 
     if @resource[:tenant_name]
